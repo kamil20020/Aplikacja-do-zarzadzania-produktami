@@ -1,10 +1,11 @@
 # Aplikacja do zarządzania produktami
-
 Prosta aplikacja webowa służąca do zarządzania różnymi produktami. Aplikacja składa się z
 frontendu i backendu. Backend udostępnia kilka endpointów do zarządzania produktami a
 frontent używa tych endpointów.
 
-## Wymagania funkcjonalne
+## 1. Spis treści:
+
+## 2. Wymagania funkcjonalne
 * Logowanie,
 * Rejestracja,
 * Wylogowanie
@@ -16,47 +17,47 @@ frontent używa tych endpointów.
 * Usuwanie produktu,
 * Przygotowanie testowej aplikacji z przykładowymi danymi.
 
-## Wymagania niefunkcjonalne
-* Bezpieczeństwo
-	- Wszystkie endpointy w backendzie powinny być zabezpieczone,
-	- Istnienie roli użytkownika oraz admina,
-	- Modifykowanie produktów jest możliwe tylko przez admina,
-	- Wykorzystanie technologii JWT do zabezpieczenia aplikacji,
-	- Podstawowa obługa błędów w backendzie np. sprawdzanie danych wejściowych.
-* Testy:
-	- Testy jednostkowe repozytoriów, kontrolerów oraz serwisów,
-	- Testy integracyjne kontrolerów z użyciem wbudowanej bazy danych,
-	- Testy bezpieczeństwa dla poszczególnych ról użytkowników.
-* Technologie:
-	a) Backend:
-		- Java 17,
-		- Spring Boot 3,
-		- Spring Web,
-		- Spring Data Jpa,
-		- Spring Security,
-		- Lombok,
-		- Mapstruct,
-		- Restassured,
-		- Mockito,
-		- Testcontainers
-		- Maven,
-		- Intellij.
-	b) Frontend:
-		- JavaScript / TypeScript,
-		- Angular,
-		- Visual Studio Code.
-	c) Inne:
-		- Baza danych PostgreSQL,
-		- Zarządzanie bazą danych poprzez PgAdmin,
-		- System kontroli wersji git i hosting GitHub,
-		- Konteneryzacja całej aplikacji z Docker i Docker Compose,
-		- Komunikacja między frontendem i backendem poprzez REST,
-		- JSON jako format wiadomości przesyłanych między frontendem i backendem,
-		- Modelowanie diagramu ERD bazy danych przy pomocy Visual Paradigm.
-* Stworzenie prostej dokumentacji,
-* Przygotowanie testowej aplikacji z przykładowymi danymi.
+## 3. Wymagania niefunkcjonalne
+### 3.1 Bezpieczeństwo
+* Wszystkie endpointy w backendzie powinny być zabezpieczone,
+* Istnienie roli użytkownika oraz admina,
+* Modifykowanie produktów jest możliwe tylko przez admina,
+* Wykorzystanie technologii JWT do zabezpieczenia aplikacji,
+* Podstawowa obługa błędów w backendzie np. sprawdzanie danych wejściowych.
 
-## Diagram ERD
+### 3.2 Testy:
+* Testy jednostkowe repozytoriów, kontrolerów oraz serwisów,
+* Testy integracyjne kontrolerów z użyciem wbudowanej bazy danych,
+* Testy bezpieczeństwa dla poszczególnych ról użytkowników.
+
+### 3.3 Technologie:
+#### 3.3.1 Backend:
+* Java 17,
+* Spring Boot 3,
+* Spring Web,
+* Spring Data Jpa,
+* Spring Security,
+* Lombok,
+* Mapstruct,
+* Restassured,
+* Mockito,
+* Testcontainers
+* Maven,
+* Intellij.
+#### 3.3.2 Frontend:
+* JavaScript / TypeScript,
+* Angular,
+* Visual Studio Code.
+#### 3.3.3 Inne:
+* Baza danych PostgreSQL,
+* Zarządzanie bazą danych poprzez PgAdmin,
+* System kontroli wersji git i hosting GitHub,
+* Konteneryzacja całej aplikacji z Docker i Docker Compose,
+* Komunikacja między frontendem i backendem poprzez REST,
+* JSON jako format wiadomości przesyłanych między frontendem i backendem,
+* Modelowanie diagramu ERD bazy danych przy pomocy Visual Paradigm.
+
+## 4. Diagram ERD
 <p align="center">
     <img src="./docs/erd/erd.png">
 <p>
