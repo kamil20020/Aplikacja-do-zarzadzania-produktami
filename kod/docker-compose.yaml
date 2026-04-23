@@ -1,0 +1,25 @@
+services:
+  database:
+    container_name: database
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: products
+      POSTGRES_USER: products
+      POSTGRES_PASSWORD: products
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/database:/var/lib/postgresql
+
+  database_management:
+    container_name: database_management
+    image: dpage/pgadmin4:9.14.0
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mail@domain.com
+      PGADMIN_DEFAULT_PASSWORD: goodPassword
+    ports:
+      - "5050:80"
+    depends_on:
+      - database

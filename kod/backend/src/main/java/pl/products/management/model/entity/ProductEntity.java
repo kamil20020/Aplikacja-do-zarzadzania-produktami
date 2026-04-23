@@ -28,8 +28,8 @@ public class ProductEntity {
 
     private String description;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "category_id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
     private ProductCategoryEntity productCategory;
 
     @Override
