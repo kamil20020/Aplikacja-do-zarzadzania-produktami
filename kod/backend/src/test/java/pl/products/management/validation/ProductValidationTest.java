@@ -6,7 +6,6 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import pl.products.management.model.api.request.CreateProductRequest;
 
 import java.math.BigDecimal;
@@ -94,6 +93,36 @@ class ProductValidationTest {
                 "opis",
                 null,
                 UUID.randomUUID().toString()
+        );
+
+        Set<ConstraintViolation<CreateProductRequest>> violations = validator.validate(request);
+
+        assertEquals(1, violations.size());
+    }
+
+    @Test
+    public void createProductRequestShouldFailWithNegativePrice(){
+
+        CreateProductRequest request = new CreateProductRequest(
+            "nazwa",
+            "opis",
+            new BigDecimal("-12.28"),
+            UUID.randomUUID().toString()
+        );
+
+        Set<ConstraintViolation<CreateProductRequest>> violations = validator.validate(request);
+
+        assertEquals(1, violations.size());
+    }
+
+    @Test
+    public void createProductRequestShouldFailWithZeroPrice(){
+
+        CreateProductRequest request = new CreateProductRequest(
+            "nazwa",
+            "opis",
+            BigDecimal.ZERO,
+            UUID.randomUUID().toString()
         );
 
         Set<ConstraintViolation<CreateProductRequest>> violations = validator.validate(request);

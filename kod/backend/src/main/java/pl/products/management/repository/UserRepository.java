@@ -11,5 +11,6 @@ import java.util.UUID;
 public interface UserRepository extends CrudRepository<UserEntity, UUID> {
 
     boolean existsByUsername(String username);
+    boolean existsByIdAndRoles_Id(UUID userId, UUID roleId);
     Optional<UserEntity> findByUsername(String username);
 }

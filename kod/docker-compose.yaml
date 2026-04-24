@@ -12,6 +12,21 @@ services:
     volumes:
       - ./data/database:/var/lib/postgresql
 
+  backend:
+    container_name: backend
+    build:
+      context: backend
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/products
+      SPRING_DATASOURCE_USERNAME: products
+      SPRING_DATASOURCE_PASSWORD: products
+      SERVER_PORT: 9000
+    ports:
+      - "9000:9000"
+    depends_on:
+      - database
+
   database_management:
     container_name: database_management
     image: dpage/pgadmin4:9.14.0

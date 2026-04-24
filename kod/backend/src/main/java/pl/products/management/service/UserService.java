@@ -9,15 +9,28 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.products.management.model.entity.RoleEntity;
 import pl.products.management.model.entity.UserEntity;
 import pl.products.management.repository.UserRepository;
+
+import java.util.HashSet;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+
+    private final RoleService roleService;
+
     private final PasswordEncoder passwordEncoder;
+
+    public UserEntity getById(UUID id) throws EntityNotFoundException{
+
+        return userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Nie odnaleziono użytkownika o id " + id));
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -39,7 +52,22 @@ public class UserService implements UserDetailsService {
         String rawPassword = userData.getPassword();
         String encryptedPassword = passwordEncoder.encode(rawPassword);
         userData.setPassword(encryptedPassword);
+        userData.setRoles(new HashSet<>());
 
         return userRepository.save(userData);
+    }
+
+    @Transactional
+    public void assignRole(UUID userId, UUID roleId) throws EntityNotFoundException, EntityExistsException{
+
+        UserEntity gotUser = getById(userId);
+        RoleEntity gotRole = roleService.getById(roleId);
+
+        if(userRepository.existsByIdAndRoles_Id(userId, roleId)){
+
+            throw new EntityExistsException("Użytkownik " + gotUser.getUsername() + " ma już przypisaną rolę " + gotRole.getName());
+        }
+
+        gotUser.getRoles().add(gotRole);
     }
 }

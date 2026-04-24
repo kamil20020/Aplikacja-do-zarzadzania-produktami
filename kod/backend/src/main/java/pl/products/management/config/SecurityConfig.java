@@ -1,5 +1,6 @@
 package pl.products.management.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +32,13 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
             );
+
+        http
+            .exceptionHandling(ex -> ex
+            .authenticationEntryPoint((request, response, authException) -> {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            })
+        );
 
         http
             .csrf(csrf -> csrf.disable())
