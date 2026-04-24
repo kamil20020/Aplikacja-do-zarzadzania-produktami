@@ -1,5 +1,6 @@
 package pl.products.management.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class UserController {
     private final UserMapper userMapper;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterRequest request){
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest request){
 
         UserEntity toCreateUserData = userMapper.map(request);
         userService.register(toCreateUserData);

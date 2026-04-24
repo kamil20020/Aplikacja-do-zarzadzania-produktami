@@ -1,5 +1,6 @@
 package pl.products.management.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/token")
-    public ResponseEntity<LoginResponse> generateToken(@RequestBody LoginRequest request){
+    public ResponseEntity<LoginResponse> generateToken(@RequestBody @Valid LoginRequest request){
 
         String gotAccessToken = authService.login(request.username(), request.password());
         LoginResponse response = new LoginResponse(gotAccessToken);

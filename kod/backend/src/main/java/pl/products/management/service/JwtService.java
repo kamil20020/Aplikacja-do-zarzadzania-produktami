@@ -1,12 +1,15 @@
 package pl.products.management.service;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.products.management.mapper.DateMapper;
 import pl.products.management.model.entity.UserEntity;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
@@ -30,7 +33,6 @@ public class JwtService {
     private final DateMapper dateMapper;
 
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
-    private static final String USERNAME_KEY = "username";
 
     public String generateAccessToken(UserEntity userEntity){
 
@@ -52,42 +54,37 @@ public class JwtService {
             .claim("firstname", userEntity.getFirstname())
             .claim("surname", userEntity.getLastname())
             .claim("roles", userEntity.getRoles())
-            .signWith(SIGNATURE_ALGORITHM, secret)
+            .signWith(getSecretKey(), SIGNATURE_ALGORITHM)
             .compact();
     }
 
-    public String extractUsername(String token, JwtParser jwtParser){
+    public String extractUsername(String token) throws JwtException{
 
-        Claims claims = jwtParser
+        Claims claims = validateToken(token)
             .parseClaimsJws(token)
             .getBody();
 
-        return (String) claims.get(USERNAME_KEY);
+        return claims.getSubject();
     }
 
-    public JwtParser validateAccessToken(String token) throws JwtException{
-
-        return validateToken(token, accessTokenExpiration);
-    }
-
-    private JwtParser validateToken(String token, Integer tokenExpiration) throws JwtException{
+    private JwtParser validateToken(String token) throws JwtException{
 
         if(token == null || token.isBlank()){
             throw new JwtException("Jwt token was not given");
         }
 
-        LocalDateTime actualRawDate = LocalDateTime.now();
-        Date actualDate = dateMapper.map(actualRawDate);
-
-        LocalDateTime validExpirationRawDate = actualRawDate.plusSeconds(tokenExpiration);
-        Date validExpirationDate = dateMapper.map(validExpirationRawDate);
-
         return Jwts.parser()
+            .verifyWith(getSecretKey())
             .requireIssuer(issuer)
             .requireAudience(audience)
-            .requireExpiration(validExpirationDate)
-            .requireNotBefore(actualDate)
             .build();
+    }
+
+    private SecretKey getSecretKey(){
+
+        byte[] secretBytes = secret.getBytes(StandardCharsets.UTF_8);
+
+        return Keys.hmacShaKeyFor(secretBytes);
     }
 }
 

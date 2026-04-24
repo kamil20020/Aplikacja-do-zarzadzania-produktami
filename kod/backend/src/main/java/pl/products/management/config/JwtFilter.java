@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.ott.InvalidOneTimeTokenException;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -45,8 +47,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String gotToken = gotTokenOpt.get();
 
-        Authentication authentication = getAuthenticationData(gotToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        Optional<Authentication> authenticationOpt = getAuthenticationData(gotToken);
+
+        if(authenticationOpt.isPresent()){
+
+            SecurityContextHolder.getContext().setAuthentication(authenticationOpt.get());
+        }
 
         filterChain.doFilter(request, response);
     }
@@ -72,29 +78,28 @@ public class JwtFilter extends OncePerRequestFilter {
                authContent.startsWith(JWT_TOKEN_PREFIX);
     }
 
-    private Authentication getAuthenticationData(String gotToken) throws InvalidOneTimeTokenException{
+    private Optional<Authentication> getAuthenticationData(String gotToken){
 
-        String gotUsername = extractUsername(gotToken);
+        String gotUsername;
+
+        try{
+            gotUsername = jwtService.extractUsername(gotToken);
+        }
+        catch(JwtException e){
+
+            log.error(e.getMessage());
+
+            return Optional.empty();
+        }
+
         UserDetails foundUser = userDetailsService.loadUserByUsername(gotUsername);
 
-        return new UsernamePasswordAuthenticationToken(
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
             foundUser,
             null,
             foundUser.getAuthorities()
         );
-    }
 
-    private String extractUsername(String gotToken) throws InvalidOneTimeTokenException{
-
-        JwtParser jwtParser;
-
-        try{
-            jwtParser = jwtService.validateAccessToken(gotToken);
-        }
-        catch(JwtException exception) {
-            throw new InvalidOneTimeTokenException("Jwt token could not be parsed");
-        }
-
-        return jwtService.extractUsername(gotToken, jwtParser);
+        return Optional.of(token);
     }
 }

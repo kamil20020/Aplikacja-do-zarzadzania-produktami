@@ -5,7 +5,6 @@ import org.mapstruct.Mapper;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Date;
 
@@ -14,11 +13,8 @@ public interface DateMapper {
 
     default Date map(LocalDateTime rawDate){
 
-        ZoneId systemZoneId = ZoneId.systemDefault();
-        ZoneOffset systemZoneOffset = ZoneOffset.of(systemZoneId.toString());
+        Instant rawDateInstant = rawDate.toInstant(ZoneOffset.UTC);
 
-        Instant rawIssuedAt = LocalDateTime.now().toInstant(systemZoneOffset);
-
-        return Date.from(rawIssuedAt);
+        return Date.from(rawDateInstant);
     }
 }
