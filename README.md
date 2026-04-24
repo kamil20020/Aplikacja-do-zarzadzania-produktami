@@ -10,7 +10,8 @@ uruchomienie aplikacji jest możliwe m.in. poprzez komendę:
 docker-compose up
 ```
 
-Jednak do uruchomienia aplikacji będzie potrzebny `Docker`.
+Proponuję, aby ta komenda była uruchomiona z lokalizacji kod. Dodatkowo do uruchomienia tej
+komendy będzie potrzebny `Docker`.
 
 Backend jest uruchomiony na porcie `9000` od strony komputera osoby uruchamiającej aplikację.
 
